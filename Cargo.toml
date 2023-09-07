@@ -1,0 +1,12 @@
+[package]
+name = "rslox"
+version = "0.1.0"
+authors = ["Dimitris Alexopoulos <glumfishfish@gmail.com>"]
+edition = "2021"
+description = "An implementation of the Lox language in Rust"
+license = "BSD-3-Clause"
+repository = "https://github.com/TheRealGlumfish/rsLox"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
