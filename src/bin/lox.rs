@@ -1,15 +1,16 @@
 use std::env;
 use std::process;
+use std::cmp::Ordering;
 
 fn main() {
     let mut args = env::args();
-    let err = if args.len() > 2 {
-        println!("Usage: rslox [script]");
-        process::exit(64);
-    } else if args.len() == 2 {
-        rslox::run_file(args.nth(1).unwrap().as_str())
-    } else {
-        rslox::run_prompt()
+    let err = match args.len().cmp(&2) {
+        Ordering::Less => rslox::run_prompt(),
+        Ordering::Equal => rslox::run_file(args.nth(1).unwrap().as_str()),
+        Ordering::Greater => {
+            println!("Usage: rslox [script]");
+            process::exit(64);
+        },
     };
     if let Err(err) = err {
         println!("Internal error: {err}");

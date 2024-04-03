@@ -1,79 +1,10 @@
-use super::Diagnostic;
 use std::collections::HashMap;
-use std::fmt;
+use super::Diagnostic;
+use super::token::Token;
+use super::token::TokenType;
 
-#[derive(Debug, PartialEq, Clone)]
-pub struct Token {
-    token_type: TokenType,
-    line: usize,
-}
-
-#[derive(Debug, PartialEq, Clone)]
-enum TokenType {
-    // Single character tokens
-    LeftParen,
-    RightParen,
-    LeftBrace,
-    RightBrace,
-    Comma,
-    Dot,
-    Minus,
-    Plus,
-    Semicolon,
-    Slash,
-    Star,
-    // One or two character tokens
-    Bang,
-    BangEqual,
-    Equal,
-    EqualEqual,
-    Less,
-    LessEqual,
-    Greater,
-    GreaterEqual,
-    // Literals
-    Identifier(String),
-    String(String),
-    Number(f64),
-    // Keywords
-    And,
-    Class,
-    Else,
-    False,
-    Fun,
-    For,
-    If,
-    Nil,
-    Or,
-    Print,
-    Return,
-    Super,
-    This,
-    True,
-    Var,
-    While,
-    // Misc.
-    EOF,
-}
-
-impl fmt::Display for Token {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        // Consider using pretty printing or manually implmeneting display for token_type
-        write!(f, "{:?}", self.token_type)
-    }
-}
-
-impl fmt::Display for TokenType {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            TokenType::Identifier(string) => write!(f, "{string}"),
-            TokenType::String(string) => write!(f, "{string}"),
-            TokenType::Number(num) => write!(f, "{num}"),
-            token_type => write!(f, "{token_type}"),
-        }
-    }
-}
-
+// TODO: Add support for block comments
+/// Scans for tokens and returns a collection of [`Token`]'s or a diagnostic if there is an error.
 pub fn scan_tokens(source: &str) -> Result<Vec<Token>, Diagnostic> {
     let keywords = HashMap::from([
         ("and", TokenType::And),
@@ -358,7 +289,7 @@ pub fn scan_tokens(source: &str) -> Result<Vec<Token>, Diagnostic> {
         }
     }
     tokens.push(Token {
-        token_type: TokenType::EOF,
+        token_type: TokenType::Eof,
         line,
     });
     Ok(tokens)
@@ -376,7 +307,7 @@ mod tests {
     #[test]
     fn comment() {
         let tokens = vec![Token {
-            token_type: TokenType::EOF,
+            token_type: TokenType::Eof,
             line: 1,
         }];
         assert_eq!(scan_tokens(SOURCE.lines().nth(0).unwrap()), Ok(tokens))
@@ -410,7 +341,7 @@ mod tests {
                 line: 1,
             },
             Token {
-                token_type: TokenType::EOF,
+                token_type: TokenType::Eof,
                 line: 1,
             },
         ];
@@ -461,7 +392,7 @@ mod tests {
                 line: 1,
             },
             Token {
-                token_type: TokenType::EOF,
+                token_type: TokenType::Eof,
                 line: 1,
             },
         ];
@@ -536,7 +467,7 @@ mod tests {
                 line: 3,
             },
             Token {
-                token_type: TokenType::EOF,
+                token_type: TokenType::Eof,
                 line: 3,
             },
         ];
@@ -566,7 +497,7 @@ mod tests {
                 line: 2,
             },
             Token {
-                token_type: TokenType::EOF,
+                token_type: TokenType::Eof,
                 line: 2,
             },
         ];
@@ -607,7 +538,7 @@ mod tests {
                 line: 2,
             },
             Token {
-                token_type: TokenType::EOF,
+                token_type: TokenType::Eof,
                 line: 2,
             },
         ];
@@ -617,7 +548,7 @@ mod tests {
                 line: 1,
             },
             Token {
-                token_type: TokenType::EOF,
+                token_type: TokenType::Eof,
                 line: 1,
             },
         ];
@@ -635,7 +566,7 @@ mod tests {
                 line: 3,
             },
             Token {
-                token_type: TokenType::EOF,
+                token_type: TokenType::Eof,
                 line: 3,
             },
         ];
@@ -672,7 +603,7 @@ mod tests {
                 line: 2,
             },
             Token {
-                token_type: TokenType::EOF,
+                token_type: TokenType::Eof,
                 line: 2,
             },
         ];
@@ -686,7 +617,7 @@ mod tests {
                 line: 2,
             },
             Token {
-                token_type: TokenType::EOF,
+                token_type: TokenType::Eof,
                 line: 2,
             },
         ];
@@ -708,7 +639,7 @@ mod tests {
                 line: 2,
             },
             Token {
-                token_type: TokenType::EOF,
+                token_type: TokenType::Eof,
                 line: 2,
             },
         ];
@@ -810,7 +741,7 @@ while";
                 line: 2,
             },
             Token {
-                token_type: TokenType::EOF,
+                token_type: TokenType::Eof,
                 line: 2,
             },
         ];
@@ -880,7 +811,7 @@ while";
                 line: 16,
             },
             Token {
-                token_type: TokenType::EOF,
+                token_type: TokenType::Eof,
                 line: 16,
             },
         ];
@@ -911,7 +842,7 @@ print nil";
                 line: 2,
             },
             Token {
-                token_type: TokenType::EOF,
+                token_type: TokenType::Eof,
                 line: 2,
             },
         ];
@@ -929,7 +860,7 @@ print nil";
                 line: 2,
             },
             Token {
-                token_type: TokenType::EOF,
+                token_type: TokenType::Eof,
                 line: 2,
             },
         ];
