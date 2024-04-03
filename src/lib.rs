@@ -2,8 +2,9 @@ pub mod lexer;
 pub mod expression;
 pub mod statement;
 pub mod token;
-pub mod parser;
+pub mod peg_parser;
 
+use peg_parser::lox_parser;
 use token::Token;
 
 use std::fs;
@@ -58,9 +59,13 @@ pub fn run_prompt() -> io::Result<()> {
 
 /// Executes the source code and returns a diagnostic if an error occurs.
 pub fn run(source: &str) -> Result<(), Diagnostic> {
-    let tokens = lexer::scan_tokens(source)?;
-    for token in tokens {
-        println!("{token}");
+    // let tokens = lexer::scan_tokens(source)?;
+    // for token in tokens {
+    //     println!("{token}");
+    // }
+    match lox_parser::expression(source) {
+        Ok(expr) => expr.print(),
+        Err(err) => println!("Parsing Error: {err}"),
     }
     Ok(()) // TODO: remove
 }

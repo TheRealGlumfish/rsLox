@@ -15,9 +15,29 @@ pub enum Expr {
     Logical(Logical),
     Set(Set),
     Super(Super),
-    This(This),
+    This,
     Unary(Unary),
     Variable(Variable),
+}
+
+#[derive(Serialize)]
+pub enum BinaryOp {
+    Less,
+    LessEqual,
+    Greater,
+    GreaterEqual,
+    Equal,
+    NotEqual,
+    Mul,
+    Div,
+    Add,
+    Sub,
+}
+
+#[derive(Serialize)]
+pub enum UnaryOp {
+    Not,
+    Neg
 }
 
 #[derive(Serialize)]
@@ -30,7 +50,7 @@ pub struct Assign {
 pub struct Binary {
     left: Box<Expr>,
     right: Box<Expr>,
-    operator: Token,
+    operator: BinaryOp,
 }
 
 #[derive(Serialize)]
@@ -77,25 +97,20 @@ pub struct Super {
 }
 
 #[derive(Serialize)]
-pub struct This {
-    keyword: Token,
-}
-
-#[derive(Serialize)]
 pub struct Unary {
     operand: Box<Expr>,
-    operator: Token,
+    operator: UnaryOp,
 }
 
 #[derive(Serialize)]
 pub struct Variable {
-    name: Token,
+    name: String,
 }
 
 #[derive(Serialize)]
 pub enum LiteralValue {
     Bool(bool),
-    Nill,
+    Nil,
     Number(f64),
     String(String),
 }
@@ -108,19 +123,30 @@ impl Expr {
 }
 
 impl Binary {
-    pub fn new(left: Expr, right: Expr, operator: Token) -> Self {
+    pub fn new(left: Expr, right: Expr, operator: BinaryOp) -> Self {
         // Add error checking code to panic if the operator is not a binary operator
         Binary { left: Box::new(left), right: Box::new(right), operator }         
     }
 }
 
 impl Unary {
-    pub fn new(operand: Expr, operator: Token) -> Self {
+    pub fn new(operand: Expr, operator: UnaryOp) -> Self {
         // Add error checking code to panic if the operator is not a binary operator
         Unary { operand: Box::new(operand), operator }
     }
 }
 
+impl Literal {
+    pub fn new(value: LiteralValue) -> Self {
+        Literal { value }
+    }
+}
+
+impl Variable {
+    pub fn new(name: String) -> Self {
+        Variable { name }
+    }
+}
 
 // trait ExprVisitor<R> {
 //     fn visit_assign(&mut self, expr: &Assign) -> R;
