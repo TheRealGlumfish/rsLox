@@ -1,7 +1,7 @@
-use std::collections::HashMap;
-use super::Diagnostic;
 use super::token::Token;
 use super::token::TokenType;
+use super::Diagnostic;
+use std::collections::HashMap;
 
 // TODO: Add support for block comments
 /// Scans for tokens and returns a collection of [`Token`]'s or a diagnostic if there is an error.

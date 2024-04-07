@@ -1,6 +1,7 @@
 use super::expression::*;
 
-peg::parser!{
+// TODO: Add quiet! and expect! error messages for identifiers, etc.
+peg::parser! {
     /// Parser for Lox language grammar, currently supporting expressions only
     pub grammar lox_parser() for str {
 
@@ -12,13 +13,13 @@ peg::parser!{
         // pub rule assignment() = ( call() "." )? IDENTIFIER() "=" assignment() / logic_or()
 
         // pub rule logic_or() = logic_and() ( "or" logic_and() )*
-        // pub rule logic_and() = equality() ( "and" equality() )* 
+        // pub rule logic_and() = equality() ( "and" equality() )*
         rule equality() -> Expr = left:comparison() right:equality_pure()* { if right.is_empty() {left} else {flatten_binary(left,right)} }
         rule equality_pure() -> (BinaryOp, Expr) = op:(EQ() / NE()) expr:comparison() { (op, expr) }
 
 
         rule comparison() -> Expr = left:term() right:comparison_pure()* { if right.is_empty() {left} else {flatten_binary(left,right)} }
-        rule comparison_pure() -> (BinaryOp, Expr) = op:(LT() / LE() / GT() / GE()) expr:term() { (op, expr) } 
+        rule comparison_pure() -> (BinaryOp, Expr) = op:(LT() / LE() / GT() / GE()) expr:term() { (op, expr) }
 
         rule term() -> Expr = left:factor() right:term_pure()*  { if right.is_empty() {left} else {flatten_binary(left, right)} }
         rule term_pure() -> (BinaryOp, Expr) = op:(ADD() / SUB()) expr:factor() { (op, expr) }
@@ -75,26 +76,32 @@ peg::parser!{
 
 fn flatten_binary(left: Expr, mut expr_list: Vec<(BinaryOp, Expr)>) -> Expr {
     let (op, right) = expr_list.pop().expect("Factors list should never be zero");
-    let left_expr = if expr_list.is_empty() { left } else { flatten_binary(left, expr_list) };
+    let left_expr = if expr_list.is_empty() {
+        left
+    } else {
+        flatten_binary(left, expr_list)
+    };
     Expr::Binary(Binary::new(left_expr, right, op))
 }
 
+// TODO: Add tests for the rest of the parser
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
-    fn string()
-    {
-        assert_eq!(lox_parser::STRING("\"Hello World\""), Ok("Hello World".to_string()));
+    fn string() {
+        assert_eq!(
+            lox_parser::STRING("\"Hello World\""),
+            Ok("Hello World".to_string())
+        );
         assert!(lox_parser::STRING("Hello World").is_err());
         assert!(lox_parser::STRING("Hello World\"").is_err());
         assert!(lox_parser::STRING("\"Hello World").is_err());
     }
 
     #[test]
-    fn number()
-    {
+    fn number() {
         assert_eq!(lox_parser::NUMBER("1.2345"), Ok(1.2345));
         assert_eq!(lox_parser::NUMBER("12345"), Ok(12345f64));
         assert!(lox_parser::NUMBER("12345asdf").is_err());
@@ -102,10 +109,5 @@ mod tests {
     }
 
     #[test]
-    fn variable()
-    {
-
-
-
-    }
+    fn variable() {}
 }

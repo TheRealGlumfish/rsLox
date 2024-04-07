@@ -1,6 +1,6 @@
+use std::cmp::Ordering;
 use std::env;
 use std::process;
-use std::cmp::Ordering;
 
 fn main() {
     let mut args = env::args();
@@ -10,7 +10,7 @@ fn main() {
         Ordering::Greater => {
             println!("Usage: rslox [script]");
             process::exit(64);
-        },
+        }
     };
     if let Err(err) = err {
         println!("Internal error: {err}");
