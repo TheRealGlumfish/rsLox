@@ -19,7 +19,7 @@ peg::parser! {
 
 
         rule comparison() -> Expr = left:term() right:comparison_pure()* { if right.is_empty() {left} else {flatten_binary(left,right)} }
-        rule comparison_pure() -> (BinaryOp, Expr) = op:(LT() / LE() / GT() / GE()) expr:term() { (op, expr) }
+        rule comparison_pure() -> (BinaryOp, Expr) = op:(LE() / GE() / GT() / LT()) expr:term() { (op, expr) }
 
         rule term() -> Expr = left:factor() right:term_pure()*  { if right.is_empty() {left} else {flatten_binary(left, right)} }
         rule term_pure() -> (BinaryOp, Expr) = op:(ADD() / SUB()) expr:factor() { (op, expr) }

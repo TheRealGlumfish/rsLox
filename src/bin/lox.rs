@@ -9,11 +9,11 @@ fn main() {
         Ordering::Equal => rslox::run_file(args.nth(1).unwrap().as_str()),
         Ordering::Greater => {
             println!("Usage: rslox [script]");
-            process::exit(64);
+            process::exit(64); // EX_USAGE
         }
     };
     if let Err(err) = err {
         println!("Internal error: {err}");
-        process::exit(74);
+        process::exit(74); // EX_IOERR
     }
 }

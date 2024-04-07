@@ -1,8 +1,8 @@
-pub mod lexer;
 pub mod expression;
+pub mod lexer;
+pub mod peg_parser;
 pub mod statement;
 pub mod token;
-pub mod peg_parser;
 
 use peg_parser::lox_parser;
 use token::Token;
@@ -15,8 +15,13 @@ use std::process;
 // TODO: Reconsider the types of errors
 #[derive(Debug, PartialEq)]
 pub enum Diagnostic {
-    LoxError { line: usize, message: String },
-    TokenError { token: Token, message: String },
+    LoxError {
+        line: usize,
+        message: String,
+    },
+    ParseError {
+        error: peg::error::ParseError<<str as peg::Parse>::PositionRepr>,
+    },
 }
 
 /// Loads a file and executes it.
@@ -26,8 +31,15 @@ pub enum Diagnostic {
 pub fn run_file(path: &str) -> io::Result<()> {
     let file = fs::read_to_string(path)?;
     if let Err(err) = run(&file) {
+        let exit_code = match &err {
+            Diagnostic::LoxError {
+                line: _,
+                message: _,
+            } => 70, // EX_SOFTWARE
+            Diagnostic::ParseError { error: _ } => 65, // EX_DATAERR
+        };
         error(err);
-        process::exit(65);
+        process::exit(exit_code);
     }
     Ok(())
 }
@@ -59,18 +71,20 @@ pub fn run_prompt() -> io::Result<()> {
 
 /// Executes the source code and returns a diagnostic if an error occurs.
 pub fn run(source: &str) -> Result<(), Diagnostic> {
-    // let tokens = lexer::scan_tokens(source)?;
-    // for token in tokens {
-    //     println!("{token}");
-    // }
-    match lox_parser::expression(source) {
-        Ok(expr) => expr.print(),
-        Err(err) => println!("Parsing Error: {err}"),
+    let expr = lox_parser::expression(source)?;
+    println!("{}", expr.eval()?);
+    Ok(())
+}
+
+impl From<peg::error::ParseError<<str as peg::Parse>::PositionRepr>> for Diagnostic {
+    // TODO: Audit
+    fn from(value: peg::error::ParseError<<str as peg::Parse>::PositionRepr>) -> Diagnostic {
+        Diagnostic::ParseError { error: value }
     }
-    Ok(()) // TODO: remove
 }
 
 // TODO: Consider consolididating error and report as an implementation of `std::fmt::Display`
+// TODO: Remove report
 /// Prints a diagnostic to the standard error.
 ///
 /// # Panics
@@ -79,13 +93,13 @@ pub fn run(source: &str) -> Result<(), Diagnostic> {
 pub fn error(diagnostic: Diagnostic) {
     match diagnostic {
         Diagnostic::LoxError { line, message } => report(line, "", &message),
-        Diagnostic::TokenError { token: _, message: _ } => todo!(),
+        Diagnostic::ParseError { error } => eprintln!("Parse Error: {error}"),
     }
 }
 
 // Prints a formated diagnostic to standard error.
 fn report(line: usize, err_where: &str, message: &str) {
-    eprintln!("[line {line} ] Error{err_where}: {message}");
+    eprintln!("[Line: {line}] Error{err_where}: {message}");
 }
 
 #[cfg(test)]
