@@ -204,7 +204,7 @@ impl Binary {
             }
             LoxValue::Nil => Err(Diagnostic::LoxError {
                 line: 69,
-                message: format!("value [Nil] cannot be added"),
+                message: "value [Nil] cannot be added".to_string(),
             }),
             _ => Err(Diagnostic::LoxError {
                 line: 69,
@@ -225,7 +225,7 @@ impl Binary {
             }
             LoxValue::Nil => Err(Diagnostic::LoxError {
                 line: 69,
-                message: format!("value [Nil] cannot be subtracted from"),
+                message: "value [Nil] cannot be subtracted from".to_string(),
             }),
             _ => Err(Diagnostic::LoxError {
                 line: 69,
@@ -249,7 +249,7 @@ impl Binary {
             }
             LoxValue::Nil => Err(Diagnostic::LoxError {
                 line: 69,
-                message: format!("value [Nil] cannot be multiplied"),
+                message: "value [Nil] cannot be multiplied".to_string(),
             }),
             _ => Err(Diagnostic::LoxError {
                 line: 69,
@@ -273,7 +273,7 @@ impl Binary {
             }
             LoxValue::Nil => Err(Diagnostic::LoxError {
                 line: 69,
-                message: format!("value [Nil] cannot be divided"),
+                message: "value [Nil] cannot be divided".to_string(),
             }),
             _ => Err(Diagnostic::LoxError {
                 line: 69,
@@ -297,7 +297,7 @@ impl Binary {
             }
             LoxValue::Nil => Err(Diagnostic::LoxError {
                 line: 69,
-                message: format!("value [Nil] cannot be compared"),
+                message: "value [Nil] cannot be compared".to_string(),
             }),
             _ => Err(Diagnostic::LoxError {
                 line: 69,
@@ -321,7 +321,7 @@ impl Binary {
             }
             LoxValue::Nil => Err(Diagnostic::LoxError {
                 line: 69,
-                message: format!("value [Nil] cannot be compared"),
+                message: "value [Nil] cannot be compared".to_string(),
             }),
             _ => Err(Diagnostic::LoxError {
                 line: 69,
@@ -345,7 +345,7 @@ impl Binary {
             }
             LoxValue::Nil => Err(Diagnostic::LoxError {
                 line: 69,
-                message: format!("value [Nil] cannot be compared"),
+                message: "value [Nil] cannot be compared".to_string(),
             }),
             _ => Err(Diagnostic::LoxError {
                 line: 69,
@@ -369,7 +369,7 @@ impl Binary {
             }
             LoxValue::Nil => Err(Diagnostic::LoxError {
                 line: 69,
-                message: format!("value [Nil] cannot be compared"),
+                message: "value [Nil] cannot be compared".to_string(),
             }),
             _ => Err(Diagnostic::LoxError {
                 line: 69,

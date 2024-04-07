@@ -5,7 +5,6 @@ pub mod statement;
 pub mod token;
 
 use peg_parser::lox_parser;
-use token::Token;
 
 use std::fs;
 use std::io;
