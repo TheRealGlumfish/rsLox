@@ -68,9 +68,13 @@ pub fn run_prompt() -> io::Result<()> {
 
 /// Executes the source code and returns a diagnostic if an error occurs.
 pub fn run(source: &str) -> Result<(), Diagnostic> {
-    let expr = lox_parser::expression(source)?;
-    println!("{}", expr.eval()?);
-    expr.print();
+    let stmts = lox_parser::program(source)?;
+    for stmt in &stmts {
+        stmt.print();
+    }
+    for stmt in stmts {
+        stmt.execute()?
+    }
     Ok(())
 }
 

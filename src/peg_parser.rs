@@ -1,10 +1,19 @@
 use super::expression::*;
+use super::statement::*;
 
 // TODO: Add quiet! and expect! error messages for identifiers, etc.
 peg::parser! {
     /// Parser for Lox language grammar, currently supporting expressions only
     pub grammar lox_parser() for str {
 
+
+        pub rule program() -> Vec<Stmt> = stmt:statement()* ![_] { stmt }
+        
+        pub rule statement() -> Stmt = expr_stmt() / print_stmt()
+
+        rule expr_stmt() -> Stmt = _ expr:expression() _ ";" _ { Stmt::Expression(expr) }
+
+        rule print_stmt() -> Stmt = _ "print" _ expr:expression() _ ";" _ { Stmt::Print(expr) }
 
         pub rule expression() -> Expr = equality()
         // pub rule expression() -> Expr = unary()
@@ -64,12 +73,12 @@ peg::parser! {
 
         pub rule NUMBER() -> f64 = num:$(DIGIT()+ ( "." DIGIT()+)?) { num.parse().unwrap() }
         pub rule STRING() -> String = "\"" string:$([^'"']*) "\"" { String::from(string) }
-        rule IDENTIFIER() = ALPHA() ( ALPHA() / DIGIT() )*
+        rule IDENTIFIER() = quiet!{ALPHA() ( ALPHA() / DIGIT() )*} / expected!("Identifier")
         rule ALPHA() = ['a'..='z' | 'A'..='Z' | '_']
-        rule DIGIT() = ['0'..='9']
+        rule DIGIT() = quiet!{['0'..='9']} / expected!("Number")
 
         // Match whitespace and comments
-        rule _ = "//"[^'\n']*['\n'] / [' ' | '\n' | '\r' |'\t']*
+        rule _ = quiet!{"//"[^'\n']*['\n'] / [' ' | '\n' | '\r' |'\t']*}
     }
 }
 
