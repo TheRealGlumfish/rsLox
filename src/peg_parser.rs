@@ -6,7 +6,6 @@ peg::parser! {
     pub grammar lox_parser() for str {
 
 
-        #[no_eof]
         pub rule expression() -> Expr = equality()
         // pub rule expression() -> Expr = unary()
 

@@ -6,10 +6,7 @@
 use serde::Serialize;
 use std::fmt;
 
-use crate::Diagnostic;
-
-use super::token::Token;
-
+use super::Diagnostic;
 // TODO: Fix proper visibility and imports for modules
 
 /// Expression types.
@@ -17,13 +14,13 @@ use super::token::Token;
 pub enum Expr {
     Assign(Assign),
     Binary(Binary),
-    Call(Call),
-    Get(Get),
+    // Call(Call),
+    // Get(Get),
     Gropuping(Grouping),
     Literal(Literal),
-    Logical(Logical),
-    Set(Set),
-    Super(Super),
+    // Logical(Logical),
+    // Set(Set),
+    // Super(Super),
     This,
     Unary(Unary),
     Variable(Variable),
@@ -59,19 +56,19 @@ pub enum BinaryOp {
     Sub,
 }
 
-/// Function call expression.
-#[derive(Serialize)]
-pub struct Call {
-    calle: Box<Expr>,
-    paren: Token,
-    arguments: Vec<Expr>,
-}
+// /// Function call expression.
+// #[derive(Serialize)]
+// pub struct Call {
+//     calle: Box<Expr>,
+//     paren: Token,
+//     arguments: Vec<Expr>,
+// }
 
-#[derive(Serialize)]
-pub struct Get {
-    object: Box<Expr>,
-    name: Token,
-}
+// #[derive(Serialize)]
+// pub struct Get {
+//     object: Box<Expr>,
+//     name: Token,
+// }
 
 /// Grouping expression.
 #[derive(Serialize)]
@@ -85,25 +82,25 @@ pub struct Literal {
     value: LiteralValue,
 }
 
-#[derive(Serialize)]
-pub struct Logical {
-    left: Box<Expr>,
-    right: Box<Expr>,
-    operator: Token,
-}
+// #[derive(Serialize)]
+// pub struct Logical {
+//     left: Box<Expr>,
+//     right: Box<Expr>,
+//     operator: Token,
+// }
 
-#[derive(Serialize)]
-pub struct Set {
-    object: Box<Expr>,
-    name: Token,
-    value: Box<Expr>,
-}
+// #[derive(Serialize)]
+// pub struct Set {
+//     object: Box<Expr>,
+//     name: Token,
+//     value: Box<Expr>,
+// }
 
-#[derive(Serialize)]
-pub struct Super {
-    keyword: Token,
-    method: Token,
-}
+// #[derive(Serialize)]
+// pub struct Super {
+//     keyword: Token,
+//     method: Token,
+// }
 
 /// Unary expression.
 #[derive(Serialize)]

@@ -1,8 +1,6 @@
 pub mod expression;
-pub mod lexer;
 pub mod peg_parser;
 pub mod statement;
-pub mod token;
 
 use peg_parser::lox_parser;
 
@@ -72,6 +70,7 @@ pub fn run_prompt() -> io::Result<()> {
 pub fn run(source: &str) -> Result<(), Diagnostic> {
     let expr = lox_parser::expression(source)?;
     println!("{}", expr.eval()?);
+    expr.print();
     Ok(())
 }
 
