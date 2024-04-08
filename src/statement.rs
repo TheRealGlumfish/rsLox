@@ -33,8 +33,7 @@ impl Stmt {
             Stmt::Print(expr) => {
                 println!("{}", expr.eval()?);
                 Ok(())
-            },
+            }
         }
     }
 }
-

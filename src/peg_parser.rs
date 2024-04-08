@@ -8,7 +8,7 @@ peg::parser! {
 
 
         pub rule program() -> Vec<Stmt> = stmt:statement()* ![_] { stmt }
-        
+
         pub rule statement() -> Stmt = expr_stmt() / print_stmt()
 
         rule expr_stmt() -> Stmt = _ expr:expression() _ ";" _ { Stmt::Expression(expr) }
@@ -67,7 +67,7 @@ peg::parser! {
         rule EQ() -> BinaryOp = _ "==" _ { BinaryOp::Equal }
         rule NE() -> BinaryOp = _ "!=" _ { BinaryOp::NotEqual }
         rule MUL() -> BinaryOp = _ "*" _ { BinaryOp::Mul }
-        rule DIV() -> BinaryOp = _ "/" _ { BinaryOp::Mul }
+        rule DIV() -> BinaryOp = _ "/" _ { BinaryOp::Div }
         rule ADD() -> BinaryOp = _ "+" _ { BinaryOp::Add }
         rule SUB() -> BinaryOp = _ "-" _ { BinaryOp::Sub }
 
